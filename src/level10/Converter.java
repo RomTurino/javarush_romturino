@@ -1,4 +1,4 @@
-package jsa;
+package level10;
 
 
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 Двоично-шестнадцатеричный конвертер
 */
 
-public class Solution {
+public class Converter {
     private static final String HEX = "0123456789abcdef";
     private static final String[] BINS = {"0000",
             "0001", "0010", "0011", "0100", "0101", "0110",
