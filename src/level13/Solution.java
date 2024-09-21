@@ -49,19 +49,15 @@ public class Solution {
         return count;
     }
     public static void compare(Character a, Character b) {
-        char c = a;
-        char d = b;
-        if (c == d){
+
+        if (a.equals(b)){
             System.out.println("Символы равны");
         }
-        else if (c > d){
+        else if (a > b){
             System.out.println("Первый символ больше");
         }
-        else if (c < d){
+        else if (a < b){
             System.out.println("Первый символ меньше");
-        }
-        else {
-            System.out.println("Символы не равны");
         }
     }
 }
