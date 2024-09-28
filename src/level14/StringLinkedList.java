@@ -31,10 +31,17 @@ public class StringLinkedList {
 
 
         last.prev = newNode;
+    }
 
-
-
-
+    public String get(int index){
+        Node currentElement = first.next;
+        for (int i = 0; i < index; i++) {
+            currentElement = currentElement.next;
+            if (currentElement == null) {
+                return null;
+            }
+        }
+        return currentElement.value;
     }
 
     public static class Node {
