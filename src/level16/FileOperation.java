@@ -1,27 +1,30 @@
 package level16;
 
-
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
-public class FileOperation {
+/*
+Читаем из консоли
+*/
+
+public class FileOperation{
     public static void main(String[] args) {
-        try(
-            Scanner scanner = new Scanner(System.in);
-        ){
-            List<String> lines = Files.readAllLines(Path.of(scanner.nextLine()));
-            for (String line : lines) {
-                System.out.println(line);
+        try (InputStream stream = System.in;
+             BufferedReader console = new BufferedReader(new InputStreamReader(stream))) {
+            String line = console.readLine();
+            char[] chars = line.toCharArray();
+            for (int i = 0; i < chars.length; i++) {
+                if (i % 2 == 1) {
+                    System.out.print(String.valueOf(chars[i]).toUpperCase());
+                } else {
+                    System.out.print(String.valueOf(chars[i]).toLowerCase());
+                }
             }
-
-
         } catch (IOException e) {
-
-            throw new RuntimeException(e);
+            System.out.println("Something went wrong : " + e);
         }
-
     }
 }
