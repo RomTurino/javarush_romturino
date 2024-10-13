@@ -1,12 +1,16 @@
 package level18;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Game {
     public static void main(String[] args) {
         int numOfGuesses = 0;
         GameHelper helper = new GameHelper();
         SimpleDotCom dotCom = new SimpleDotCom();
         int randomNum = (int) (Math.random() * 5);
-        int[] locations = {randomNum, randomNum+1, randomNum+2};
+        ArrayList<Integer> locations = new ArrayList<>();
+        Collections.addAll(locations, randomNum, randomNum+1, randomNum+2);
 
         dotCom.setLocationCells(locations);
         boolean isAlive = true;
