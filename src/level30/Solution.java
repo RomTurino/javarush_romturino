@@ -1,102 +1,44 @@
 package level30;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-/*
-Читаем и пишем в файл: Human
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/* 
+Serializable Solution
 */
 
-public class Solution {
-    public static void main(String[] args) {
-        //исправьте outputStream/inputStream в соответствии с путем к вашему реальному файлу
-        try {
-            File your_file_name = File.createTempFile("your_file_name", null);
-            OutputStream outputStream = new FileOutputStream(your_file_name);
-            InputStream inputStream = new FileInputStream(your_file_name);
-
-            Human ivanov = new Human("Ivanov", new Asset("home", 999_999.99), new Asset("car", 2999.99));
-            ivanov.save(outputStream);
-            outputStream.flush();
-
-            Human somePerson = new Human();
-            somePerson.load(inputStream);
-            inputStream.close();
-            //check here that ivanov equals to somePerson - проверьте тут, что ivanov и somePerson равны
-            if (ivanov.equals(somePerson)) {
-                System.out.println("OK");
-            }
-
-        } catch (IOException e) {
-            //e.printStackTrace();
-            System.out.println("Oops, something wrong with my file");
-        } catch (Exception e) {
-            //e.printStackTrace();
-            System.out.println("Oops, something wrong with save/load method");
-        }
+public class Solution implements Serializable{
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        FileOutputStream fileOutputStream = new FileOutputStream("solution.dat");
+        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
+        Solution savedObject = new Solution(4);
+        outputStream.writeObject(savedObject);
+        outputStream.close();
+        FileInputStream fileInputStream = new FileInputStream("solution.dat");
+        ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
+        Solution loadedObject = (Solution) inputStream.readObject();
+        System.out.println(loadedObject.toString().equals(savedObject.toString()));
+        inputStream.close();
     }
 
-    public static class Human {
-        public String name;
-        public List<Asset> assets = new ArrayList<>();
+    private transient final String pattern = "dd MMMM yyyy, EEEE";
+    private transient Date currentDate;
+    private transient int temperature;
+    String string;
 
-        public Human() {
-        }
+    public Solution(int temperature) {
+        this.currentDate = new Date();
+        this.temperature = temperature;
 
-        public Human(String name, Asset... assets) {
-            this.name = name;
-            if (assets != null) {
-                this.assets.addAll(Arrays.asList(assets));
-            }
-        }
+        string = "Today is %s, and the current temperature is %s C";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        this.string = String.format(string, format.format(currentDate), temperature);
+    }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Human human = (Human) o;
-
-            if (name != null ? !name.equals(human.name) : human.name != null) return false;
-            return assets != null ? assets.equals(human.assets) : human.assets == null;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = name != null ? name.hashCode() : 0;
-            result = 31 * result + (assets != null ? assets.hashCode() : 0);
-            return result;
-        }
-
-        public void write(OutputStream outputStream, String param) throws IOException {
-            outputStream.write((param + "\n").getBytes());
-        }
-
-        public void save(OutputStream outputStream) throws Exception {
-            //implement this method - реализуйте этот метод
-            write(outputStream, name);
-            String isAssets = !assets.isEmpty() ? "yes" : "no";
-            write(outputStream, isAssets);
-            if (isAssets.equals("yes")) {
-                for (Asset asset : assets) {
-                    write(outputStream, asset.getName());
-                    write(outputStream, String.valueOf(asset.getPrice()));
-                }
-            }
-        }
-
-        public void load(InputStream inputStream) throws Exception {
-            //implement this method - реализуйте этот метод
-            String[] allInfo = new String(inputStream.readAllBytes()).split("\n");
-            name = allInfo[0];
-            String isAssets = allInfo[1];
-            if (isAssets.equals("yes")) {
-                for (int i = 2; i < allInfo.length; i += 2) {
-                    assets.add(new Asset(allInfo[i], Double.parseDouble(allInfo[i + 1])));
-                }
-            }
-        }
+    @Override
+    public String toString() {
+        return this.string;
     }
 }
